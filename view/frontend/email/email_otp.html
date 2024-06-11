@@ -1,0 +1,9 @@
+<!--@subject {{trans " OTP verification code" }} @-->
+<!--@vars {
+"var otp|raw":"OTP"
+} @-->
+{{template config_path="design/email/header_template"}}
+<p>{{trans "Greetings! Your verification code for Test store is %otp" otp=$otp |raw}}
+    {{trans "Please keep this code confidential and do not share it with anyone."}}
+</p>
+{{template config_path="design/email/footer_template"}}

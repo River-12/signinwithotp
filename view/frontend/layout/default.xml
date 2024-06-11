@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+   <head>
+    <css src="Riverstone_SignInWithOtp::css/intlTelInput.css"/>
+    <css src="Riverstone_SignInWithOtp::css/custom.css"/>
+    <script src="Riverstone_SignInWithOtp::js/utils.js"/>
+          </head>
+    <body>
+        <referenceBlock name="register-link">
+            <arguments>
+                <argument name="class" xsi:type="string">river-register-link</argument>
+            </arguments>
+        </referenceBlock>
+        <referenceBlock name="authorization-link-login">
+            <arguments>
+                <argument name="class" xsi:type="string">river-login-link</argument>
+            </arguments>
+        </referenceBlock>
+        <referenceContainer name="before.body.end">
+            <block class="Riverstone\SignInWithOtp\Block\Popup\Form\Login"  name="river-popup-login" template="Riverstone_SignInWithOtp::popup/login.phtml" ifconfig="riverstone_sign_in_otp/general/enable"/>
+            <block class="Riverstone\SignInWithOtp\Block\Popup\Form\Register"  name="river-popup-register" template="Riverstone_SignInWithOtp::popup/register.phtml" ifconfig="riverstone_sign_in_otp/general/enable" />
+            <block class="Magento\Framework\View\Element\Template" name="river-popup-otp" template="Riverstone_SignInWithOtp::popup/otp.phtml" ifconfig="riverstone_sign_in_otp/general/enable"/>
+            <block class="Riverstone\SignInWithOtp\Block\Popup\Form\Verify" name="river-popup-verify" template="Riverstone_SignInWithOtp::popup/message.phtml" ifconfig="riverstone_sign_in_otp/general/enable"/>
+        </referenceContainer>
+    </body>
+</page>

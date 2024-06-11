@@ -1,0 +1,217 @@
+<?php if (!$block->isLoggedIn()): ?>
+    <div id="riverstone-popup-login" class="riverstone-popup-login tab-content">
+        <div class="col-md-6">
+            <div class="tabs">
+                <div class="tab">
+                    <label class="with-otp">Sign in with OTP</label>
+                </div>
+                <div class="tab">
+                    <label class="with-password">Sign in with Password</label>
+                </div>
+            </div>
+            <div class="block block-customer-login">
+                <div class="otp_messages"></div>
+                <div class="block-content" aria-labelledby="block-riverstone-popup-login-heading">
+                    <form class="form form-login custom-login" action="<?= /* @noEscape */
+                    $block->getPostActionUrl() ?>" method="post" id="riverstone-popup-login-form"
+                          data-mage-init='{"validation":{}}' style="display:none;">
+                        <?= /* @noEscape */
+                        $block->getBlockHtml('formkey'); ?>
+                        <input type="hidden" name="redirect_url" value="<?= /* @noEscape */
+                        $block->getUrl('customer/account'); ?>"/>
+                        <fieldset class="fieldset login" data-hasrequired="<?= /* @noEscape */
+                        __('* Required Fields') ?>">
+                            <div class="messages"></div>
+                            <div class="field email required">
+                                <div class="control">
+                                    <input name="username" placeholder="Email" value="" id="email-login"
+                                           type="email" class="input-text" title="<?= /* @noEscape */
+                                            __('Email') ?>" data-validate="{required:true, 'validate-email':true}">
+                                </div>
+                            </div>
+                            <div class="field password required">
+                                <div class="control">
+                                    <input name="password" placeholder="Password" type="password"
+                                           autocomplete="off" class="input-text" id="pass-login"
+                                           title="<?= /* @noEscape */
+                                            __('Password') ?>" data-validate="{required:true}">
+                                </div>
+                            </div>
+                            <div class="actions-toolbar">
+                                <div class="primary">
+                                    <button type="submit" class="action login primary" name="send" id="send-login">
+                                        <span><?= /* @noEscape */
+                                            __('Sign In') ?></span></button>
+                                </div>
+                                <div class="field password">
+                                    <div class="or"><?= /* @noEscape */
+                                        __('or'); ?></div>
+                                </div>
+                                <div class="secondary"><a class="action remind" href="<?= /* @noEscape */
+                                    $block->getCustomerRegistrationUrl() ?>"
+                                                          id="riverstone-popup-registration"><span><?= /* @noEscape */
+                                                            __('Create an Account') ?></span></a></div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+                <div class="otp_message">
+                    <div class="error_message"></div>
+                    <form class="form form-login" id="otp-form" data-mage-init='{"validation":{}}'>
+                        <?= /* @noEscape */
+                        $block->getBlockHtml('formkey') ?>
+                        <fieldset class="fieldset login" data-hasrequired="<?= /* @noEscape */
+                        $block->escapeHtml(__('* Required Fields')) ?>">
+                            <div class="field mobile required">
+                                <div class="control">
+                                    <input type="tel" placeholder="Mobile Number" name="mobile_number"
+                                           alt="number" id="number" class="validate-length minimum-length-10 input-text"
+                                           data-validate="{required:true}">
+                                    <span class ="note">Please enter the mobile number with country-code</span>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="or"><?= /* @noEscape */
+                                    __('or'); ?></div>
+                            </div>
+                            <div class="field email required">
+                                <div class="control">
+                                    <input name="login[username]" placeholder="Email" value="" id="email" type="email"
+                                           class="input-text" title="<?= /* @noEscape */
+                                            __('Email') ?>" data-validate="{required:true, 'validate-email':true}">
+                                </div>
+                            </div>
+                            <?= /* @noEscape */
+                            $block->getChildHtml('form_additional_info') ?>
+                            <div class="actions-toolbar">
+                                <div class="primary">
+                                    <button type="button" class="action login primary sendotp" name="send"
+                                            id="send-login"><span><?= $block->escapeHtml(__('Send OTP')) ?></span>
+                                    </button>
+                                </div>
+                                <?php if (!$block->customerIsAlreadyLoggedIn()): ?>
+                                    <div class="field password">
+                                        <div class="or"><?= /* @noEscape */
+                                            __('or'); ?></div>
+                                    </div>
+                                    <div class="secondary"><a class="action remind" href="<?= /* @noEscape */
+                                        $block->getCustomerRegistrationUrl() ?>"
+                                                              id="riverstone-popup-registration"><span><?=
+                                                /* @noEscape */ __('Create an Account') ?></span></a></div>
+                                <?php endif; ?>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+                <div class="actions-toolbar">
+                    <div class="secondary"><a class="action forgot-password"
+                                              id="riverstone-popup-forgot"><span><?= /* @noEscape */
+                                                __('Forgot Password?') ?></span></a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        require(["jquery"], function ($) {
+            $('.forgot-password').css('display', 'none');
+            $('.forgot-password').on('click', function () {
+                $('.with-otp').css('border-bottom', 'none');
+                $('.with-password').css('border-bottom', 'none');
+                $('.custom-login').css('display', 'none');
+                $('.forgot-password').css('display', 'none');
+                $('.otp_message').css('display', 'block');
+                $('.social-login-authentication-channel').css('display', 'none');
+            });
+            $('.with-otp').on('click', function () {
+                $('.forgot-password').css('display', 'none');
+                $('.with-password').css('border-bottom', 'none');
+                $('.with-otp').css('border-bottom', '2px solid lightslategray');
+                $('.otp_message').css('display', 'block');
+                $('.custom-login').css('display', 'none');
+                $('.social-login-authentication-channel').css('display', 'none');
+            });
+            $('.with-password').on('click', function () {
+                $('.forgot-password').css('display', 'block');
+                $('.with-otp').css('border-bottom', 'none');
+                $('.with-password').css('border-bottom', '2px solid lightslategray');
+                $('.otp_message').css('display', 'none');
+                $('.custom-login').css('display', 'block');
+                $('.social-login-authentication-channel').css('display', 'block');
+            });
+
+            $('.sendotp').on('click', function () {
+                var customurl = "<?= /* @noEscape */ $block->getUrl('riverstone_sign_in_otp/account/otpsender') ?>";
+                var number = $('#number').val();
+                var email = $('#email').val();
+
+                if (number || email) {
+                    $('body').loader().loader('show');
+                    if (number) {
+                        var data = {
+                            mobile_number: number
+                        }
+                    }
+                    if (email) {
+                        var data = {
+                            email_id: email
+                        }
+                    }
+                    $.ajax({
+                        url: customurl,
+                        data: data,
+                        type: 'POST',
+                        dataType: 'json',
+                        success: function (response) {
+                            $('body').loader().loader('hide');
+                            if (response.errors) {
+                                $('.modal-header').css('display', 'block');
+                                $(".message").remove();
+                                $('<div class="message message-error error"><div>' + response.message +
+                                    ' please try again later.</div></div>').appendTo('.error_message');
+                            } else {
+                                $(".message").remove();
+                                console.log(response);
+                                console.log(response.message);
+
+                                $('<div class="message message-success success"><div>' + response.message +
+                                    '</div></div>').appendTo('.sucess_message');
+                                $('#riverstone-popup-login').modal('closeModal');
+                                $('#riverstone-popup-otp').modal('openModal');
+
+                            }
+                        },
+                        error: function () {
+                            $('body').loader().loader('hide');
+                            $('<div class="message message-error error"><div>An error occurred,' +
+                                ' please try again later.</div></div>').appendTo('.error_message');
+                        }
+                    });
+                } else {
+                    $('#error_message').css('display', 'block');
+                    $('#error_message').text('Please enter the email or mobile number');
+                }
+            });
+        });
+    </script>
+    <script type="text/x-magento-init">
+        {
+                "#riverstone-popup-login": {
+                    "Riverstone_SignInWithOtp/js/riverstone-authentication-popup": {
+                        "popupTitle": "<?= /* @noEscape */
+                        __('Sign In') ?>",
+                        "innerWidth": "40"
+                    }
+                }
+            }
+    </script>
+    </div>
+<?php endif; ?>
+<script type="application/javascript">
+    require([
+        'jquery',
+        'intlTelInput'
+    ], function ($) {
+        $("#number").intlTelInput(<?= /* @noEscape */ $block->getPhoneconfig(); ?>)
+    });
+</script>

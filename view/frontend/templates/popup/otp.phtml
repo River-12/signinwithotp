@@ -1,0 +1,114 @@
+<?php
+
+?>
+<div id="riverstone-popup-otp" class="riverstone-popup-otp">
+    <div class="col-md-6">
+        <div class="error_message"></div>
+        <div class="sucess_message"></div>
+        <form class="form" method="post" id="form-otpsend" data-mage-init='{"validation":{}}'>
+            <input type="hidden" name="redirect_url"
+                   value="<?= $block->escapeHtmlAttr(__($block->getUrl('customer/account/'))); ?>"/>
+            <fieldset class="fieldset" data-hasrequired="<?= $block->escapeHtmlAttr(__('* Required Fields')) ?>">
+                <div class="field otp required">
+                    <div class="control">
+                        <input type="password" placeholder="Enter OTP" name="otp" alt="otp" id="otp" class="input-text"
+                               data-validate="{required:true}">
+                    </div>
+                </div>
+                <?= $block->getChildHtml('form_additional_info') ?>
+            </fieldset>
+            <div class="actions-toolbar">
+                <div class="primary">
+                    <button type="button" class="action submit sendotpsubmit primary">
+                        <span><?= $block->escapeHtml(__('Enter OTP')) ?></span></button>
+                </div>
+                <div class="secondary">
+                    <button type="button" class="resendotp">
+                        <span> <?= $block->escapeHtml(__('Resend OTP')) ?> </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    require(["jquery"], function ($) {
+        $('.sendotpsubmit').on('click', function () {
+            if ($('#form-otpsend').valid()) {
+                $('body').loader().loader('show');
+                $.ajax({
+                    url: "<?= /* @noEscape */ $block->getUrl('riverstone_sign_in_otp/account/verifyloginotp') ?>",
+                    data: $('#form-otpsend').serialize(),
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (response) {
+                        $('body').loader().loader('hide');
+                        if (response.errors) {
+                            $(".message").remove();
+                            $('<div class="message message-error error"><div>' + response.message +
+                                '</div></div>').appendTo('.error_message');
+                        } else {
+                            $(".message").remove();
+                            $('<div class="message message-success success"><div>' + response.message +
+                                '</div></div>').appendTo('.sucess_message');
+                            var url = $('#form-otpsend').find('input[name="redirect_url"]').val();
+                            window.location.href = url;
+                        }
+                    },
+                    error: function () {
+                        $('body').loader().loader('hide');
+                        $(".message").remove();
+                        $('<div class="message message-error error"><div>An error occurred, please try again later.' +
+                            '</div></div>').appendTo('.error_message');
+                    }
+                });
+            }
+        });
+    });
+</script>
+<script type="text/x-magento-init">
+    {
+                "#riverstone-popup-otp": {
+                    "Riverstone_SignInWithOtp/js/riverstone-authentication-popup": {
+                        "popupTitle": "<?= /* @noEscape */ __('Create an Account'); ?>",
+                        "innerWidth": "60"
+                    }
+                }
+            }
+</script>
+<script>
+    require(["jquery"], function ($) {
+        $(document).ready(function () {
+            $('.resendotp').on('click', function (e) {
+                e.preventDefault();
+                console.log('resendotp')
+                $('body').loader().loader('show');
+                $.ajax({
+                    url: '<?= /* @noEscape */ $block->getUrl('riverstone_sign_in_otp/account/resend'); ?>',
+                    type: 'POST',
+                    data: {},
+                    dataType: 'json',
+                    success: function (response) {
+                        $(".message").remove();
+                        $('body').loader().loader('hide');
+                        if (response.errors) {
+                            $('#error_message').css('display', 'block');
+                            $('<div class="message message-error error"><div>An error occurred, please try again later.'
+                                + '</div></div>').appendTo('.error_message');
+                        } else {
+                            $('#sucess_message').css('display', 'block');
+                            $('<div class="message message-success success"><div>' + response.message +
+                                    '</div></div>').appendTo('.sucess_message');
+                        }
+                    },
+                    error: function () {
+                        $('body').loader().loader('hide');
+                        $(".message").remove();
+                        $('<div class="message message-error error"><div>An error occurred, please try again later.' +
+                            '</div></div>').appendTo('.error_message');
+                    }
+                });
+            });
+        });
+    });
+</script>

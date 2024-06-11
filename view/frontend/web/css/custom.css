@@ -1,0 +1,144 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+.riverstone-popup-login .modals-overlay {
+  z-index: 899 !important;
+}
+
+.riverstone-popup-login .riverstone-popup-login {
+  display: none;
+}
+
+.riverstone-popup-login .or-another-selection.riverstone-popup-registration{
+  display: inline-block;
+  padding-right: 5px;
+  margin: 20px 0 0 0;
+}
+.password .or{
+    display: inline-block;
+    padding-left: 1px;
+    margin: 20px -1px 20px;
+}
+
+.or{
+  display: inline-block;
+  padding-left: 220px;
+}
+
+.riverstone-popup-login .tabs {
+  display: flex;
+  margin-bottom: 30px;
+  overflow: hidden;
+}
+
+.riverstone-popup-login .tabs label {
+  cursor: pointer;
+  display: block;
+  font-size: 1.1em;
+  font-weight: 300;
+  line-height: 1em;
+  padding: 2rem 0;
+  text-align: center;
+}
+
+.riverstone-popup-login .modal-popup .modal-header {
+  padding-top: 0rem !important;
+}
+
+.riverstone-popup-login .tabs .tab {
+  width: 50%;
+}
+
+.riverstone-popup-otp {
+  display: none;
+}
+
+.modals-overlay {
+  z-index: 899 !important;
+}
+
+.modals-overlay {
+  z-index: 899 !important;
+}
+
+.riverstone-popup-register {
+  display: none;
+}
+.modal-popup .modal-inner-wrap{ width: 30%; }
+
+.modal-popup .modal-title {
+  border-bottom: none !important;
+}
+
+.form-create-account fieldset,
+.riverstone-popup-otp fieldset,
+.riverstone-popup-login fieldset {
+  padding: 20px;
+}
+
+.form-create-account .actions-toolbar,
+.riverstone-popup-login .actions-toolbar,
+.riverstone-popup-otp .actions-toolbar {
+  text-align: center;
+  padding-left: 15px !important;
+}
+
+.form-create-account .actions-toolbar .primary,
+.riverstone-popup-otp .actions-toolbar .primary,
+.riverstone-popup-login .actions-toolbar .primary {
+  width: 100% !important;
+}
+
+.remind span {
+  float: initial;
+  width: 100%;
+  font-size: 15px;
+  color: #012b72;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#riverstone-popup-forgot {
+  font-size: 15px;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  margin: -45px;
+}
+#riverstone-popup-sign-in {
+    font-size: 15px;
+    color: black;
+    font-weight: bold;
+    cursor: pointer;
+    margin: -45px;
+  }
+.send-login{
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+#popup-email_address{
+width: 75%;
+}
+
+#phone_otp {
+    width: 75%;
+    }
+
+#email_otp{
+    width: 75%;
+    }
+.verifed{
+    max-width : 5%
+}
+.verifedtag{
+    color: green;
+}
+.verify-note {
+    background-color: #fff3cd;
+    color: #856404;
+    border-color: #ffeeba;
+    padding: 15px;
+    border-radius: 5px;
+}

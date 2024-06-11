@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+            <block class="Riverstone\SignInWithOtp\Block\Popup\Form\Otp" name="otp_verify" template="Riverstone_SignInWithOtp::verify.phtml" cacheable="false"/>
+        </referenceContainer>
+<!--        <referenceContainer name="header.container" remove="true" />-->
+        <referenceContainer name="footer" remove="true" />
+        <referenceBlock name="catalog.topnav" remove="true"/>
+        <referenceBlock name="register-link" remove="true" />
+        <referenceBlock name="authorization-link-login" remove="true" />
+        <referenceBlock name="top.links" remove="true" />
+        <referenceBlock name="top.search" remove="true"/>
+        <referenceBlock name="minicart" remove="true" />
+        <referenceBlock name="catalog.compare.link" remove="true" />
+        <referenceBlock name="catalog.compare.sidebar" remove="true"/>
+        <referenceBlock name="catalogsearch.product.addto.compare" remove="true"/>
+        <referenceBlock name="category.product.addto.compare" remove="true"/>
+        <referenceBlock name="crosssell.product.addto.compare" remove="true" />
+        <referenceBlock name="related.product.addto.compare" remove="true" />
+        <referenceBlock name="upsell.product.addto.compare" remove="true" />
+        <referenceBlock name="view.addto.compare" remove="true" />
+        <referenceBlock name="wishlist_sidebar" remove="true"/>
+        <referenceBlock name="river-popup-verify" remove="true"/>
+        <referenceBlock name="sale.reorder.sidebar" remove="true"/>
+    </body>
+</page>

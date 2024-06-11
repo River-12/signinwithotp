@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+    <template id="riverstone_sign_in_otp_general_email_template" label="OTP Email" file="email_otp.html" type="html" module="Riverstone_SignInWithOtp" area="frontend"/>
+    <template id="riverstone_sign_in_otp_general_verify_email_template" label="Verification Email" file="verify_email.html" type="html" module="Riverstone_SignInWithOtp" area="frontend"/>
+
+</config>

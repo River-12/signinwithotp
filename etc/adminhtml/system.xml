@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="riverstoneinfotech" translate="label" sortOrder="100" class="riverstoneinfotech-logo">
+            <label>Riverstone</label>
+        </tab>
+        <section id="riverstone_sign_in_otp" translate="label" sortOrder="130" showInDefault="1" showInWebsite="1"
+                 showInStore="1">
+        <class>separator-top</class>
+        <label>Sign-In With OTP</label>
+        <tab>riverstoneinfotech</tab>
+        <resource>Riverstone_SignInWithOtp::configuration</resource>
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1"
+                   showInStore="1">
+                <label>General Configuration</label>
+                <field id="enable" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Module Enable</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="email_sender" translate="label" type="select" sortOrder="30" showInDefault="1"
+                       showInWebsite="0" showInStore="0" canRestore="1">
+                    <label>Email sender</label>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Identity</source_model>
+                </field>
+                 <field id="email_template" translate="label comment" type="select" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Email for OTP send</label>
+                <comment>Email template chosen based on theme fallback when "Default" option is selected.</comment>
+                <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                </field>
+                <field id="verify_email_template" translate="label comment" type="select" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Email for Verification</label>
+                    <comment>Email template chosen based on theme fallback when "Default" option is selected.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                </field>
+                <field id="sms_length" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Enter OTP length</label>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                </field>
+                <field id="sms_type" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Enter OTP Type</label>
+                    <source_model>Riverstone\SignInWithOtp\Model\Config\SmsType</source_model>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                </field>
+                <field id="expire_time" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Enter OTP expire time</label>
+                    <comment>Note:Enter in seconds</comment>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                </field>
+                <field id="service" translate="label" type="select" sortOrder="2" showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="1">
+                    <label>Service provider</label>
+                    <source_model>Riverstone\SignInWithOtp\Model\Config\Options</source_model>
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                </field>
+                <field id="account_sid" translate="label" type="text" sortOrder="2" showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="1">
+                    <label>Enter Twilio Account SID</label>
+                    <depends>
+                        <field id="enable">1</field>
+                        <field id="service">twilio</field>
+                    </depends>
+                </field>
+                <field id="auth_token" translate="label" type="text" sortOrder="2" showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="1">
+                    <label>Enter Twilio Auth Token</label>
+                    <depends>
+                        <field id="enable">1</field>
+                        <field id="service">twilio</field>
+                    </depends>
+                </field>
+                <field id="phone_mobile" translate="label" type="text" sortOrder="2" showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="1">
+                    <label>Enter Twilio Phone Number</label>
+                    <depends>
+                        <field id="enable">1</field>
+                        <field id="service">twilio</field>
+                    </depends>
+                </field>
+                 <field id="allow_country" translate="label" type="multiselect" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Allow Countries</label>
+                    <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
+                    <can_be_empty>1</can_be_empty>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

@@ -1,0 +1,28 @@
+<!--@subject {{trans "Welcome to %store_name." store_name=$store_name}} @-->
+<!--@vars {
+"var email|raw":"Email",
+"var store_name":"Store name",
+"var email_verify_link|raw":"email_verify_link",
+"var mobile_verify_link|raw":"mobile_verify_link",
+"var is_email_verified|raw":"is_email_verified",
+"var is_phone_verified|raw":"is_phone_verified",
+"var customer.firstname|raw":"customer firstname"
+} @-->
+{{template config_path="design/email/header_template"}}
+<p class="greeting">{{trans "%name," name=$customer.firstname}}</p>
+<p>{{trans "Welcome to %store_name." store_name=$store_name}}</p>
+<p>Thanks for signing with us</p>
+<p>Please verify your Email and Mobile number using following links: </p>
+<p>
+    {{if is_email_verified }}
+    {{else}}
+    {{trans ' To verify your email, please click' |raw}} <a href="{{var email_verify_link }}">here.</a>
+    {{/if}}
+</p>
+<p>
+    {{if is_phone_verified }}
+    {{else}}
+    {{trans ' To verify your mobile number, please click' |raw}} <a href="{{var mobile_verify_link }}">here.</a>
+    {{/if}}
+</p>
+{{template config_path="design/email/footer_template"}}

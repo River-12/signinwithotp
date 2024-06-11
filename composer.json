@@ -1,0 +1,27 @@
+{
+  "name": "riverstone/signinwithotp",
+  "version": "1.0.0",
+  "description": "Using the extension user can login using the mobile/email otp",
+  "type": "magento2-module",
+   "require": {
+        "magento/framework": "102.*|103.*",
+         "twilio/sdk" : "*"
+    },
+  "authors": [
+{
+     "name": "Riverstone Technology Unlimited",
+     "email": "info@riverstonetech.com",
+     "homepage": "https://www.riverstonetech.com",
+     "role": "Technical Support"
+    }
+  ],
+  "license": "MIT",
+  "autoload": {
+"files": [
+     "registration.php"
+],
+      "psr-4": {
+     "Riverstone\\SignInWithOtp\\": ""
+       }
+  }
+ }

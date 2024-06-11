@@ -1,0 +1,130 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/** @var Info $block */
+
+use Magento\Customer\Block\Account\Dashboard\Info;
+
+$isEmailVerified = $block->getCustomer()->getCustomAttribute('is_email_verified') &&
+    $block->escapeHtml($block->getCustomer()->getCustomAttribute('is_email_verified')->getValue());
+$isPhoneVerified = $block->getCustomer()->getCustomAttribute('is_phone_verified') &&
+    $block->escapeHtml($block->getCustomer()->getCustomAttribute('is_phone_verified')->getValue());
+$phoneNumber = $block->escapeHtml($block->getCustomer()->getCustomAttribute('mobile_phone') ?
+    $block->getCustomer()->getCustomAttribute('mobile_phone')->getValue() : null);
+?>
+<div class="error_message"></div>
+<div class="sucess_message"></div>
+<div class="block block-dashboard-info">
+    <?php if (!($isEmailVerified && $isPhoneVerified)):?>
+    <div class="verify-note">
+        <p>Please verify your e-mail/phone number.</p>
+    </div>
+    <?php endif; ?>
+
+    <div class="block-title"><strong><?= $block->escapeHtml(__('Account Information')) ?></strong></div>
+    <div class="block-content">
+        <div class="box box-information">
+            <strong class="box-title">
+                <span><?= $block->escapeHtml(__('Contact Information')) ?></span>
+            </strong>
+            <div class="box-content">
+                <p>
+                    <?= $block->escapeHtml($block->getName()) ?><br>
+                    <?= $block->escapeHtml($block->getCustomer()->getEmail()) ?>
+                    <?php if ($isEmailVerified):?>
+                        <span class="verifedtag">Verified
+                            <img class="verifed" src="<?=  /* @noEscape */
+                                $block->getViewFileUrl('Riverstone_SignInWithOtp::images/tick.png'); ?>" alt="tick">
+                        </span>
+                <?php else: ?>
+                    <a href='#' class="class="verify-link">Verify</a>
+                <?php endif; ?>
+                <br>
+                    <?= /* @noEscape */ $phoneNumber ?>
+                <?php if ($isPhoneVerified): ?>
+                    <span class="verifedtag">Verified
+                        <img class="verifed" src="<?=  /* @noEscape */ $block->
+                        getViewFileUrl('Riverstone_SignInWithOtp::images/tick.png'); ?>"
+                             alt="tick">
+                    </span>
+                <?php elseif ($phoneNumber): ?>
+                    <a href='#' class="verify-link">Verify</a>
+                <?php endif; ?>
+                <br>
+
+                </p>
+                <?= $block->getChildHtml('customer.account.dashboard.info.extra'); ?>
+            </div>
+            <div class="box-actions">
+                <a class="action edit" href="<?= $block->escapeUrl($block->getUrl('customer/account/edit')) ?>">
+                    <span><?= $block->escapeHtml(__('Edit')) ?></span>
+                </a>
+                <a href="<?= $block->escapeUrl($block->getChangePasswordUrl()) ?>" class="action change-password">
+                    <?= $block->escapeHtml(__('Change Password')) ?>
+                </a>
+            </div>
+        </div>
+        <?php if ($block->isNewsletterEnabled()): ?>
+            <div class="box box-newsletter">
+                <strong class="box-title">
+                    <span><?= $block->escapeHtml(__('Newsletters')) ?></span>
+                </strong>
+                <div class="box-content">
+                    <p>
+                        <?php if ($block->getIsSubscribed()): ?>
+                            <?= $block->escapeHtml(__('You are subscribed to "General Subscription".')) ?>
+                        <?php else: ?>
+                            <?= $block->escapeHtml(__('You aren\'t subscribed to our newsletter.')) ?>
+                        <?php endif; ?>
+                    </p>
+                </div>
+                <div class="box-actions">
+                    <a class="action edit" href="<?= $block->escapeUrl($block->getUrl('newsletter/manage')) ?>">
+                        <span><?= $block->escapeHtml(__('Edit')) ?></span></a>
+                </div>
+            </div>
+        <?php endif; ?>
+        <?= $block->getChildHtml('additional_blocks'); ?>
+    </div>
+</div>
+<script>
+    require(["jquery"], function ($) {
+        $(document).ready(function () {
+            $('.verify-link').on('click', function (e) {
+                e.preventDefault();
+                console.log('verify-link')
+                $('body').loader().loader('show');
+                $.ajax({
+                    url: '<?= /* @noEscape */ $block->getUrl('riverstone_sign_in_otp/account/email'); ?>',
+                    type: 'POST',
+                    data: {'id': <?=  /* @noEscape */ $block->getCustomer()->getId() ?>},
+                    dataType: 'json',
+                    success: function (response) {
+                        $(".message").remove();
+                        $('body').loader().loader('hide');
+                        if (response.errors) {
+                            $('#error_message').css('display', 'block');
+                            $('<div class="message message-error error"><div>An error occurred, please try again later.'
+                               + '</div></div>').appendTo('.error_message');
+                        } else {
+                            $('#sucess_message').css('display', 'block');
+                            $('<div class="message message-success success"><div>' + response.message +
+                                '</div></div>').appendTo('.sucess_message');
+                            setTimeout(function(){
+                                $(".sucess_message").fadeOut(1500);}, 5000);
+                        }
+                    },
+                    error: function () {
+                        $('body').loader().loader('hide');
+                        $(".message").remove();
+                        $('<div class="message message-error error"><div>An error occurred, please try again later.' +
+                            '</div></div>').appendTo('.error_message');
+                    }
+                });
+            });
+        });
+    });
+</script>

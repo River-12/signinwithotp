@@ -1,0 +1,134 @@
+<?php $i = 0; ?>
+<div>
+    <div class ="para">
+        <p>Please enter the otp received</p>
+    </div>
+    <div class ="redirect" style="display:none">
+        <p>To redirect to our store, please click <a href="<?= /* @noEscape */ $block->getUrl(); ?>">here</a></p>
+    </div>
+    <div class ="otpmessages"></div>
+    <div class ="error_message"></div>
+    <div class ="sucess_message"></div>
+    <form class="form" method="post" id="form-otpsend" data-mage-init='{"validation":{}}'>
+        <input type="hidden" name="redirect_url"
+               value=""/>
+        <fieldset class="fieldset" data-hasrequired="<?= $block->escapeHtmlAttr(__('* Required Fields')) ?>">
+            <div class="field otp required">
+                <div class="control">
+                    <?php for ($value = $block->getOtpLength(); $value > 0; $value--):?>
+                    <input type="text" maxlength="1" id=<?= /* @noEscape */ 'otp'.$value ?>
+                    name=<?= /* @noEscape */ 'otp'.$value ?>
+                           data-validate="{required:true}" />
+                    <?php endfor; ?>
+                </div>
+            </div>
+            <?= $block->getChildHtml('form_additional_info') ?>
+        </fieldset>
+        <div class="actions-toolbar">
+            <div class="primary">
+                <button type="button" class="action submit sendotpsubmit1 primary">
+                    <span><?= $block->escapeHtml(__('Enter OTP')) ?></span></button>
+            </div>
+            <div class="secondary">
+                <button type="button" class="resendotp1">
+                    <span> <?= $block->escapeHtml(__('Resend OTP')) ?> </span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+</div>
+
+<style>
+    /* Basic styling for OTP input */
+    .control {
+        display: flex;
+    }
+
+    .control input {
+        width: 30px; /* Adjust the width of each input box as needed */
+        text-align: center;
+        margin: 0 5px;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+</style>
+<script>
+    require(["jquery"], function ($) {
+        $('.redirect').css('display', 'none');
+        $('.sendotpsubmit1').on('click', function () {
+            if ($('#form-otpsend').valid()) {
+                $('body').loader().loader('show');
+                $.ajax({
+
+                    url: "<?= /* @noEscape */ $block->getUrl('riverstone_sign_in_otp/account/verifyotp') ?>",
+                    data: $('#form-otpsend').serialize(),
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (response) {
+                        $('body').loader().loader('hide');
+                        if (response.errors) {
+                            $(".message").remove();
+                            $('<div class="message message-error error"><div>' + response.message +
+                                '</div></div>').appendTo('.otpmessages');
+                        } else {
+                            $(".message").remove();
+                            $('<div class="message message-success success"><div>' + response.message +
+                                '</div></div>').appendTo('.otpmessages');
+                            $('.control').css('display', 'none');
+                            $('.sendotpsubmit1').css('display', 'none');
+                            $('.resendotp1').css('display', 'none');
+                            $('.para').css('display', 'none');
+                            $('.redirect').css('display', 'block');
+                        }
+                    },
+                    error: function () {
+                        $('body').loader().loader('hide');
+                        $(".message").remove();
+                        $('<div class="message message-error error"><div>An error occurred, please try again later.' +
+                            '</div></div>').appendTo('#error_message');
+                    }
+                });
+            }
+        });
+    });
+</script>
+<script>
+    require(["jquery"], function ($) {
+        $(document).ready(function () {
+            $('.resendotp1').on('click', function (e) {
+                e.preventDefault();
+                console.log('resendotp')
+                $('body').loader().loader('show');
+                $.ajax({
+                    url: '<?= /* @noEscape */ $block->getUrl('riverstone_sign_in_otp/account/resendotp'); ?>',
+                    type: 'POST',
+                    data: <?= /* @noEscape */ json_encode($block->getData('params')); ?>,
+                    dataType: 'json',
+                    success: function (response) {
+                        $(".message").remove();
+                        $('body').loader().loader('hide');
+                        if (response.errors) {
+                            $('#error_message').css('display', 'block');
+                            $('<div class="message message-error error"><div>An error occurred, please try again later.'
+                                + '</div></div>').appendTo('.error_message');
+                        } else {
+                            $('#sucess_message').css('display', 'block');
+                            $('<div class="message message-success success"><div>' + response.message +
+                                '</div></div>').appendTo('.sucess_message');
+                        }
+                    },
+                    error: function () {
+                        $('body').loader().loader('hide');
+                        $(".message").remove();
+                        $('<div class="message message-error error"><div>An error occurred, please try again later.' +
+                            '</div></div>').appendTo('.error_message');
+                    }
+                });
+            });
+        });
+    });
+</script>
+

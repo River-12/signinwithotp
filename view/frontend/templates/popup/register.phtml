@@ -1,0 +1,144 @@
+<?php if (!$block->customerIsAlreadyLoggedIn() && $block->getRegistration()->isAllowed()): ?>
+    <div id="riverstone-popup-register" class="riverstone-popup-register">
+        <form class="form-create-account col-md-6" method="post" id="riverstone-popup-form-register"
+              enctype="multipart/form-data" autocomplete="off" data-mage-init='{"validation":{}}'>
+            <?= /* @noEscape */
+            $block->getBlockHtml('formkey'); ?>
+            <input type="hidden" name="redirect_url" value="<?= /* @noEscape */
+            $block->getUrl('customer/account/'); ?>"/>
+            <div class="messages"></div>
+            <fieldset class="fieldset create account" data-hasrequired="<?= /* @noEscape */
+            __('*All Fields Required') ?>">
+                <div class="error_message"></div>
+                <div class="field required">
+                    <div class="control">
+                        <input type="text" placeholder="First Name" name="firstname" class="input-text"
+                               data-validate="{required:true}">
+                    </div>
+                </div>
+                <div class="field required">
+                    <div class="control">
+                        <input type="text" placeholder="Last Name" name="lastname" class="input-text"
+                               data-validate="{required:true}">
+                    </div>
+                </div>
+                <div class="field required">
+                    <input class="text" name="dob" id="dob" placeholder="Date of Birth" type="date"
+                           data-validate="{required:true}">
+                </div>
+                <div class="field required">
+                    <div class="control" style="display: flex; align-items: center;">
+                        <input type="email" name="email" placeholder="Email Address" autocomplete="email"
+                               id="popup-email_address" value="" class="input-text"
+                               data-validate="{required:true, 'validate-email':true}">
+                        </input>
+                    </div>
+                </div>
+                <div class="field required">
+                    <div class="control" style="display: flex; align-items: center;">
+                        <input type="tel" name="mobile_number" placeholder="Mobile Number" id="phone" value=""
+                               class="input-text" data-validate="{required:true}">
+                    </div>
+                    <span class ="note">Please enter the mobile number with country-code</span>
+                </div>
+                <div class="field password required" data-mage-init='{"passwordStrengthIndicator": {}}'>
+                    <div class="control">
+                        <input type="password" placeholder="Password" name="password" id="password"
+                               title="<?= /* @noEscape */
+                                __('Password') ?>" class="input-text"
+                               data-password-min-length="<?= /* @noEscape */
+                                $block->escapeHtml($block->getMinimumPasswordLength()) ?>"
+                               data-password-min-character-sets="<?= /* @noEscape */
+                                $block->escapeHtml($block->getRequiredCharacterClassesNumber()) ?>"
+                               data-validate="{required:true, 'validate-customer-password':true}" autocomplete="off">
+                        <div id="password-strength-meter-container" data-role="password-strength-meter">
+                            <div id="password-strength-meter" class="password-strength-meter">
+                                <?= /* @noEscape */
+                                __('Password Strength'); ?>:
+                                <span id="password-strength-meter-label" data-role="password-strength-meter-label">
+                                    <?= /* @noEscape */
+                                    __('No Password'); ?>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <div class="actions-toolbar">
+                <div class="primary">
+                    <button type="submit" id="create_account" class="action submit primary"
+                            title="<?= /* @noEscape */
+                            __('Create an Account') ?>"><span><?= /* @noEscape */
+                            __('Create an Account') ?></span></button>
+                </div>
+                <div class="field password">
+                    <div class="or"><?= /* @noEscape */
+                        __('or'); ?></div>
+                </div>
+                <div class="secondary"><a class="action remind" href="<?= /* @noEscape */
+                    $block->getBackUrl() ?>" id="riverstone-popup-sign-in"><span><?= /* @noEscape */
+                            __('Sign In') ?></span></a></div>
+            </div>
+        </form>
+        <script type="text/x-magento-init">
+            {
+                "#riverstone-popup-register": {
+                    "Riverstone_SignInWithOtp/js/riverstone-authentication-popup": {
+                        "popupTitle": "<?= /* @noEscape */
+                        __('Create an Account'); ?>",
+                        "innerWidth": "200"
+                    }
+                }
+            }
+        </script>
+    </div>
+<?php endif; ?>
+<script>
+    require(['jquery'], function ($) {
+        $(document).ready(function () {
+            $('#riverstone-popup-form-register').submit(function (e) {
+                if ($('#riverstone-popup-form-register').valid()) {
+                    e.preventDefault();
+                    var inputData = $('#riverstone-popup-form-register').serialize();
+                        if (inputData) {
+                            $.ajax({
+                                url: '<?= /* @noEscape */ $block->getUrl('riverstone_sign_in_otp/account/postotp'); ?>',
+                                type: 'POST',
+                                dataType: 'json',
+                                data: inputData,
+                                showLoader: true,
+                                success: function (response) {
+                                    console.log(response);
+                                    if (response.errors) {
+                                        console.log('if');
+                                        $('#error_message').css('display', 'block');
+                                        $('<div class="message message-error error"><div>' + response.message +
+                                            '</div></div>').appendTo('.error_message');
+                                    } else {
+                                        window.location.href = $('#riverstone-popup-form-register').
+                                        find('input[name="redirect_url"]').val();
+                                    }
+
+                                },
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    console.error('AJAX Error: ' + textStatus, errorThrown);
+                                }
+                            });
+                        } else {
+                            $('#error_message').css('display', 'block');
+                            $('<div class="message message-error error"><div>' + 'Please enter value all the fields' +
+                                '</div></div>').appendTo('#error_message');
+                        }
+                    }
+                    });
+            });
+        });
+</script>
+<script type="application/javascript">
+    require([
+        'jquery',
+        'intlTelInput'
+    ], function ($) {
+        $("#phone").intlTelInput(<?= /* @noEscape */ $block->getPhoneconfig(); ?>)
+    });
+</script>

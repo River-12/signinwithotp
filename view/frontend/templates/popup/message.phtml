@@ -1,0 +1,87 @@
+<?php
+$isEmailVerified = $block->getIsEmailVerified();
+$isLoggedIn = $block->getIsLoggedIn();
+$url = $block->getUrl('riverstone_sign_in_otp/account/email', ['id' => $block->getCustomerId()]);
+?>
+<div id="riverstone-popup-verify" class="riverstone-popup-verify">
+    <div class="error_message"></div>
+    <div class="sucess_message"></div>
+    <?php if ($isLoggedIn): ?>
+    <div class="col-md-6">
+        <p>Please verify your email/phone number using the link you have received in the email to proceed further.</p>
+        <p>If you didn't receive the email, please click <a href="#" class="verify-link">here.</a></p>
+    </div>
+    <?php endif;?> 
+</div>
+<script>require(['jquery', 'Magento_Ui/js/modal/modal'],
+        function (
+            $,
+            modal
+        ) {
+            var modaloption = {
+                type: 'popup',
+                modalClass: 'verify',
+                responsive: true,
+                innerScroll: true,
+                title: 'Verify',
+                buttons: [
+                    {
+                        text: $.mage.__('OK'),
+                        class: 'ok',
+                        click: function () {
+                            this.closeModal();
+                            window.location.reload();
+                        }
+                    }
+                ],
+                opened: function ($Event) {
+                    $('.modal-header button.action-close', $Event.srcElement).hide();
+                },
+            };
+            var callforoption = modal(modaloption, $('#riverstone-popup-verify'));
+            var isVerified = <?= /* @noEscape */ $isEmailVerified; ?>;
+            var isLogin = <?= /* @noEscape */ $isLoggedIn ? 1 : 0; ?>;
+            if (isLogin) {
+                if (isVerified == 1) {
+                    $('#riverstone-popup-verify').modal('openModal');
+                }
+            }
+        });
+</script>
+<script>
+    require(["jquery"], function ($) {
+        $(document).ready(function () {
+            $(.riverstone-popup-verify).css('display','none');
+            $('.verify-link').on('click', function (e) {
+                e.preventDefault();
+                console.log('verify-link')
+                $('body').loader().loader('show');
+                $.ajax({
+                    url: '<?= /* @noEscape */ $block->getUrl('riverstone_sign_in_otp/account/email'); ?>',
+                    type: 'POST',
+                    data: {'id': <?= /* @noEscape */ $block->getCustomerId(); ?>},
+                    dataType: 'json',
+                    success: function (response) {
+                        $(".message").remove();
+                        $('body').loader().loader('hide');
+                        if (response.errors) {
+                            $('#error_message').css('display', 'block');
+                            $('<div class="message message-error error"><div>An error occurred, please try again later.'
+                                + '</div></div>').appendTo('.error_message');
+                        } else {
+                            $('#sucess_message').css('display', 'block');
+                            $('<div class="message message-success success"><div>' + response.message +
+                                '</div></div>').appendTo('.sucess_message');
+                        }
+                    },
+                    error: function () {
+                        $('body').loader().loader('hide');
+                        $(".message").remove();
+                        $('<div class="message message-error error"><div>An error occurred, please try again later.' +
+                            '</div></div>').appendTo('.error_message');
+                    }
+                });
+            });
+        });
+    });
+</script>
